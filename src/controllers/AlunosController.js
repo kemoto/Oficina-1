@@ -1,8 +1,9 @@
-const prisma = require("../database");
+const prisma = require("../../prisma");
 
 class AlunosController {
   async create(req, res) {
-    const { nome, escolaId } = req.body;
+    const { nome } = req.body;
+    const { escolaId, turmaId } = req.query
 
     if (!nome) {
       throw new AppError("É preciso informar o nome do aluno.");
@@ -14,8 +15,14 @@ class AlunosController {
       );
     }
 
+    if(!turmaId) {
+      throw new AppError(
+        "É preciso informar o id da turma onde o aluno será cadastrado."
+      )
+    }
+
     const aluno = await prisma.aluno.create({
-      data: { nome, escolaId },
+      data: { nome, escolaId, turmaId }
     });
 
     res.status(201).json(aluno);
