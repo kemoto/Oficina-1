@@ -3,57 +3,30 @@ const AppError = require("../utils/AppError");
 
 class MateriasController {
   async create(req, res) {
-    const { nome, escolaId } = req.body;
+    const { nome } = req.body;
 
     if (!nome) {
       throw new AppError("Nome não definido.");
     }
 
-    await knex("materias").insert({ nome, escolaId });
+    await knex("materias").insert({ nome });
     res.status(201).json();
   }
 
-  // async index(req, res) {
-  //   const materias = await prisma.materia.findMany();
+  async index(req, res) {
+    const materias = await knex("materias");
 
-  //   if (!materias) {
-  //     throw new AppError("Nenhum registro encontrado.");
-  //   }
+    res.json(materias);
+  }
 
-  //   res.status(200).json(materias);
-  // }
+  async update(req, res) {
+    const { materiaId } = req.query;
+    const { nome } = req.body;
 
-  // async update(req, res) {
-  //   const { id } = req.params;
-  //   const { nome } = req.body;
+    await knex("materias").where({id: materiaId}).update({nome, updated_at: knex.fn.now()});
 
-  //   if (!id) {
-  //     throw new AppError("É necessário passar o id do item que será alterado.");
-  //   }
-
-  //   if (!nome) {
-  //     throw new AppError("É necessário passar o novo nome do item.");
-  //   }
-
-  //   const materia = await prisma.materia.update({
-  //     where: { id: parseInt(id) },
-  //     data: { nome },
-  //   });
-
-  //   res.status(200).json(materia);
-  // }
-
-  // async delete(req, res) {
-  //   const { id } = req.params;
-
-  //   if (!id) {
-  //     throw new AppError("É necessário passar o id do item que será excluído.");
-  //   }
-
-  //   await prisma.materia.delete({ where: { id: parseInt(id) } });
-
-  //   res.status(200).json({ message: "Matéria excluída com sucesso." });
-  // }
+    res.json();
+  }
 }
 
 module.exports = MateriasController;

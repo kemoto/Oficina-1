@@ -3,10 +3,14 @@ const AppError = require("../utils/AppError");
 
 class NotasController {
   async create(req, res) {
-    const { nota, materiaId, alunoId } = req.body;
+    const { nota, bimestre, materiaId, alunoId } = req.body;
 
     if (!nota) {
       throw new AppError("É preciso informar a nota.");
+    }
+
+    if (!bimestre) {
+      throw new AppError("É preciso informar o bimestre da nota.");
     }
 
     if (!materiaId) {
@@ -19,52 +23,19 @@ class NotasController {
       );
     }
 
-    await knex("notas").insert({ nota, materiaId, alunoId });
+    await knex("notas").insert({ nota, bimestre, materiaId, alunoId });
 
-    res.status(201).json();
+    res.json();
   }
 
-  // async index(req, res) {
-  //   const notas = await prisma.nota.findMany();
+  async update(req, res) {
+    const { notaId } = req.query;
+    const { nota, bimestre, materiaId, alunoId } = req.body;
 
-  //   if (!alunos) {
-  //     throw new AppError("Nenhum registro encontrado.");
-  //   }
+    await knex("notas").where({ id: notaId }).update({nota, bimestre, materiaId, alunoId, updated_at: knex.fn.now()})
 
-  //   res.status(200).json(notas);
-  // }
-
-  // async update(req, res) {
-  //   const { id } = req.params;
-  //   const { valor } = req.body;
-
-  //   if (!id) {
-  //     throw new AppError("É necessário passar o id do item que será alterado.");
-  //   }
-
-  //   if (!valor) {
-  //     throw new AppError("É necessário passar o novo valor do item.");
-  //   }
-
-  //   const nota = await prisma.nota.update({
-  //     where: { id: parseInt(id) },
-  //     data: { valor },
-  //   });
-
-  //   res.status(200).json(nota);
-  // }
-
-  // async delete(req, res) {
-  //   const { id } = req.params;
-
-  //   if (!id) {
-  //     throw new AppError("É necessário passar o id do item que será excluído.");
-  //   }
-
-  //   await prisma.nota.delete({ where: { id: parseInt(id) } });
-
-  //   res.status(200).json({ message: "Nota excluída com sucesso." });
-  // }
+    res.json();
+  }
 }
 
 module.exports = NotasController;

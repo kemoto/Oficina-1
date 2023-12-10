@@ -11,48 +11,39 @@ class EscolasController {
       );
     }
 
-    await knex("escolas").insert({ nome, contato })
+    await knex("escolas").insert({ nome, contato });
 
     res.status(201).json();
   }
 
-  // async index(req, res) {
-  //   const escolas = await prisma.escola.findMany();
+  async index(req, res) {
+    const escolas = await knex("escolas");
 
-  //   if (!escolas) {
-  //     throw new AppError("Nenhum registro foi encontrado.");
-  //   }
+    res.json(escolas);
+  }
 
-  //   res.status(200).json(escolas);
-  // }
+  async show(req, res) {
+    const { escolaId } = req.query;
 
-  // async update(req, res) {
-  //   const { id } = req.params;
-  //   const { nome, endereco, contato } = req.body;
+    const escola = await knex("escolas")
+      .innerJoin("alunos", "escolas.id", "alunos.escolaId")
+      .where({ "escolas.id": escolaId });
 
-  //   if (!id) {
-  //     throw new AppError("É necessário passar o id do item que será alterado.");
-  //   }
+    res.json(escola);
+  }
 
-  //   const escola = await prisma.escola.update({
-  //     where: { id: parseInt(id) },
-  //     data: { nome, endereco, contato },
-  //   });
+  async update(req, res) {
+    const { escolaId } = req.query;
+    const { nome, contato } = req.body;
 
-  //   res.status(200).json(escola);
-  // }
+    await knex("escolas").where({ id: escolaId }).update({
+      nome,
+      contato,
+      updated_at: knex.fn.now(),
+    });
 
-  // async delete(req, res) {
-  //   const { id } = req.params;
-
-  //   if (!id) {
-  //     throw new AppError("É necessário passar o id do item que será excluído.");
-  //   }
-
-  //   await prisma.escola.delete({ where: { id: parseInt(id) } });
-    
-  //   res.status(200).json({ message: "Escola excluída com sucesso." });
-  // }
+    res.json();
+  }
 }
 
 module.exports = EscolasController;
