@@ -6,8 +6,8 @@ const turmasController = new TurmasController;
 const turmasRouter = Router();
 
 turmasRouter.post('/', turmasController.create);
-// turmasRouter.get('/', turmasController.index);
-// turmasRouter.put('/:id', turmasController.update);
+turmasRouter.get('/listar', turmasController.index);
+turmasRouter.put('/:turmaId', turmasController.update);
 // turmasRouter.delete('/:id', turmasController.delete);
 
 module.exports = turmasRouter;

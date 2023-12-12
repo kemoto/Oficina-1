@@ -33,7 +33,8 @@ class EscolasController {
   }
 
   async update(req, res) {
-    const { escolaId, nome, endereco, contato } = req.body;
+    const { escolaId } = req.params;
+    const { nome, endereco, contato } = req.body;
 
     await knex("escolas").where({ id: escolaId }).update({
       nome,
@@ -43,6 +44,14 @@ class EscolasController {
     });
 
     res.json();
+  }
+
+  async updateShow(req, res) {
+    const { escolaId } = req.params;
+
+    const escola = await knex("escolas").where({id: escolaId});
+
+    res.json(escola);
   }
 }
 

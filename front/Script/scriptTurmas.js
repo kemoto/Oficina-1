@@ -1,123 +1,127 @@
-function populateTable(dados) {
-    if (dados && dados.length > 0) {
-        const tableBody = document.querySelector('#tabelaTurmas tbody');
-        tableBody.innerHTML = '';
+async function getUsers() {
+  try {
+    const response = await fetch("http://localhost:3000/turmas/listar");
 
-        dados.forEach(turma => {
-            console.log('Nome da turma:', turma.nome);
-            const newRow = tableBody.insertRow();
-        
-            const turmaCell = newRow.insertCell(0);
-            const turmaLink = document.createElement('a');
-            turmaLink.href = '../TurmaAlunos/turmaalunos.html';
-            turmaLink.textContent = turma.nome;
-            turmaCell.appendChild(turmaLink);
-        
-            const editCell = newRow.insertCell(1);
-            var imagem = document.createElement('img');
-            imagem.src = '../imagens/Editor2.png';
-            imagem.style.float = 'right';   
-            editCell.appendChild(imagem);
-        });
+    if (!response.ok) {
+      throw new Error(`Erro na requisição: ${response.statusText}`);
     }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.error("Erro ao obter usuários:", error);
+    return [];
+  }
 }
 
-const dados = [
-    {
-        nome: 'Turma A'
-    },
-    {
-        nome: 'Turma B'
-    },
-    {
-        nome: 'Turma C'
-    },
-    {
-        nome: 'Turma D'
-    },
-    {
-        nome: 'Turma E'
-    },
-    {
-        nome: 'Turma F'
-    },
-    {
-        nome: 'Turma G'
-    },
-    {
-        nome: 'Turma H'
-    },
-    {
-        nome: 'Turma I'
-    },
-    {
-        nome: 'Turma J'
-    },
-    {
-        nome: 'Turma K'
-    },
-    {
-        nome: 'Turma L'
-    },
-    {
-        nome: 'Turma M'
-    },
-    {
-        nome: 'Turma N'
-    },
-    {
-        nome: 'Turma O'
-    },
-    {
-        nome: 'Turma P'
-    },
-    {
-        nome: 'Turma Q'
-    },
-    {
-        nome: 'Turma R'
-    },
-    {
-        nome: 'Turma S'
-    },
-    {
-        nome: 'Turma T'
-    },
-    {
-        nome: 'Turma U'
-    },
-    {
-        nome: 'Turma V'
-    }
-];
+async function populateTable() {
+  const dados = await getUsers();
 
-populateTable(dados);
+  if (dados && dados.length > 0) {
+    const tableBody = document.querySelector("#tabelaTurmas tbody");
+    tableBody.innerHTML = "";
 
-function adicionarEscola() {
-    const nomeTurma = document.getElementById('nomeTurma').value;
+    dados.forEach((turma) => {
+      console.log("Nome da turma:", turma.nome);
+      const newRow = tableBody.insertRow();
 
-    const novaTurma = {
+      const turmaCell = newRow.insertCell(0);
+      const turmaLink = document.createElement("a");
+      turmaLink.href = "../TurmaAlunos/turmaalunos.html";
+      turmaLink.textContent = turma.nome;
+      turmaCell.appendChild(turmaLink);
+
+      const editCell = newRow.insertCell(1);
+      let editButton = document.createElement("button");
+      let imageButton = document.createElement("img");
+      imageButton.src = "../imagens/Editor2.png";
+      imageButton.style.float = "right";
+      editButton.addEventListener("click", () => updateMostrarModal(turma));
+      editButton.appendChild(imageButton);
+      editCell.appendChild(editButton);
+    });
+  }
+}
+
+populateTable();
+
+async function adicionarTurma() {
+  const nomeTurma = document.getElementById("nomeTurma").value;
+
+  try {
+    const response = await fetch("http://localhost:3000/turmas/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
         nome: nomeTurma,
-    };
+      }),
+    });
 
-    dados.push(novaTurma); 
-
-    populateTable(dados);
-
-    fecharModal(); 
+    if (response.ok) {
+      populateTable();
+    }
+  } catch (error) {
+    console.error("Erro na requisição:", error);
+  }
 }
 
 function fecharModal() {
-    const modal = document.getElementById('modal');
-    modal.style.display = 'none';
-    const overlay = document.getElementById('overlay');
-    overlay.style.display = 'none';
+  const modal = document.getElementById("modal");
+  modal.style.display = "none";
+  const overlay = document.getElementById("overlay");
+  overlay.style.display = "none";
 }
 
 function mostrarModal() {
-    document.getElementById('nomeTurma').value = '';
-    const overlay = document.getElementById('overlay');
-    overlay.style.display = 'block';
-    const modal = document.getElementById('modal');
-    modal.style.display = 'block';
+  document.getElementById("nomeTurma").value = "";
+  const overlay = document.getElementById("overlay");
+  overlay.style.display = "block";
+  const modal = document.getElementById("modal");
+  modal.style.display = "block";
+}
+
+async function updateMostrarModal(turma) {
+  turmaid = turma.id;
+  document.getElementById("nomeTurma").value = turma.nome;
+  const overlay = document.getElementById("overlay");
+  overlay.style.display = "block";
+  const modal = document.getElementById("updateMmodal");
+  modal.style.display = "block";
+}
+
+function fecharModalUpdate() {
+  const modal = document.getElementById("updateMmodal");
+  modal.style.display = "none";
+  const overlay = document.getElementById("overlay");
+  overlay.style.display = "none";
+}
+
+async function saveEditedUser() {
+  const nome = document.getElementById("nomeTurmaUpdate").value;
+
+  try {
+    const response = await fetch(`http://localhost:3000/turmas/${turmaid}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nome,
+      }),
+    });
+
+    console.log(response);
+
+    if (response.ok) {
+      populateTable()
+    } else {
+      const errorMessage = await response.text();
+      console.error("Erro ao editar usuário:", errorMessage);
+    }
+  } catch (error) {
+    console.error("Erro na requisição:", error);
+  }
 }

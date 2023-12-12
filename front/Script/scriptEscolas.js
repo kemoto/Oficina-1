@@ -15,29 +15,8 @@ async function getUsers() {
   }
 }
 
-async function GetUserById(id) {
-  try {
-      const response = await fetch(`http://localhost:3000/escolas/${id}`);
-      if (!response.ok) {
-          throw new Error(`Erro na requisição: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-
-      console.log(data)
-
-      return data;
-  } catch (error) {
-      console.error('Erro ao obter usuário:', error);
-      return null;
-  }
-}
-
 async function populateTable() {
   const dados = await getUsers();
-  let cont = 0; 
-
-  // console.log(dados[0].id);
 
   if (dados && dados.length > 0) {
     const tableBody = document.querySelector("#tabelaEscolas tbody");
@@ -63,11 +42,9 @@ async function populateTable() {
       let imageButton = document.createElement("img");
       imageButton.src = "../imagens/Editor2.png";
       imageButton.style.float = "right";
-      editButton.addEventListener('click', () => GetUserById(dados[cont].id));
+      editButton.addEventListener("click", () => updateMostrarModal(escola));
       editButton.appendChild(imageButton);
       editCell.appendChild(editButton);
-
-      cont++;
     });
   }
 }
@@ -114,4 +91,53 @@ function mostrarModal() {
   overlay.style.display = "block";
   const modal = document.getElementById("modal");
   modal.style.display = "block";
+}
+
+async function updateMostrarModal(escola) {
+  escolaid = escola.id;
+  document.getElementById("nomeEscolaUpdate").value = escola.nome;
+  document.getElementById("enderecoEscolaUpdate").value = escola.endereco;
+  document.getElementById("contatoEscolaUpdate").value = escola.contato;
+  const overlay = document.getElementById("overlay");
+  overlay.style.display = "block";
+  const modal = document.getElementById("updateMmodal");
+  modal.style.display = "block";
+}
+
+function fecharModalUpdate() {
+  const modal = document.getElementById("updateMmodal");
+  modal.style.display = "none";
+  const overlay = document.getElementById("overlay");
+  overlay.style.display = "none";
+}
+
+async function saveEditedUser() {
+  const nome = document.getElementById("nomeEscolaUpdate").value;
+  const endereco = document.getElementById("enderecoEscolaUpdate").value;
+  const contato = document.getElementById("contatoEscolaUpdate").value;
+
+  try {
+    const response = await fetch(`http://localhost:3000/escolas/${escolaid}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nome,
+        endereco,
+        contato,
+      }),
+    });
+
+    console.log(response);
+
+    if (response.ok) {
+      populateTable()
+    } else {
+      const errorMessage = await response.text();
+      console.error("Erro ao editar usuário:", errorMessage);
+    }
+  } catch (error) {
+    console.error("Erro na requisição:", error);
+  }
 }

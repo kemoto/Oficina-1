@@ -3,21 +3,9 @@ const AppError = require("../utils/AppError");
 
 class TurmasController {
   async create(req, res) {
-    const { nome, ano, escolaId } = req.body;
+    const { nome } = req.body;
 
-    if (!nome || !ano) {
-      throw new AppError(
-        "Todos os campos são necessários para completar o cadastro."
-      );
-    }
-
-    if (!escolaId) {
-      throw new AppError(
-        "É preciso informar o id da escola a qual a turma será vinculada."
-      );
-    }
-
-    await knex("turmas").insert({ nome, ano, escolaId });
+    await knex("turmas").insert({ nome});
 
     res.status(201).json();
   }
@@ -38,15 +26,11 @@ class TurmasController {
 
   async update(req, res) {
     const { turmaId } = req.params;
-    const { nome, ano } = req.body;
-
-    if (!nome || !ano) {
-      throw new AppError("Todos os campos devem estar preenchidos.");
-    }
+    const { nome } = req.body;
 
     await knex("turmas")
       .where({ id: turmaId })
-      .update({ nome, ano, updated_at: knex.fn.now() });
+      .update({ nome, updated_at: knex.fn.now() });
 
     res.json();
   }

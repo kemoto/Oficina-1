@@ -3,20 +3,16 @@ const AppError = require("../utils/AppError");
 
 class AlunosController {
   async create(req, res) {
-    const { nome, escolaId, turmaId } = req.body;
+    const { nome } = req.body;
 
-    if (!nome || !escolaId || !turmaId) {
-      throw new AppError("Todos os campos devem estar preenchidos.");
-    }
-
-    await knex("alunos").insert({ nome, escolaId, turmaId });
+    await knex("alunos").insert({ nome });
 
     res.json();
   }
 
   //lista 1 aluno
   async show(req, res) {
-    const { alunoId } = req.query;
+    const { alunoId } = req.params;
 
     if (!alunoId) {
       throw new AppError("Aluno não encontrado.");
@@ -38,16 +34,12 @@ class AlunosController {
   }
 
   async update(req, res) {
-    const { nome, escolaId, turmaId } = req.body;
-    const { alunoId } = req.query;
-
-    if (!nome || !escolaId || !turmaId) {
-      throw new AppError("Todos os campos devem estar preenchidos.");
-    }
+    const { alunoId } = req.params;
+    const { nome } = req.body;
 
     await knex("alunos")
       .where({ id: alunoId })
-      .update({ nome, escolaId, turmaId, updated_at: knex.fn.now() });
+      .update({ nome, updated_at: knex.fn.now() });
 
     res.json();
   }
