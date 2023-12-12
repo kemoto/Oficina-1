@@ -32,13 +32,13 @@ async function populateTable() {
           nomeLink.textContent = aluno.nome;
           nomeCell.appendChild(nomeLink);
 
-          const escolaCell = newRow.insertCell(1);
-          escolaCell.textContent = aluno.escola;
+          // const escolaCell = newRow.insertCell(1);
+          // escolaCell.textContent = aluno.escola;
 
-          const turmaCell = newRow.insertCell(2);
-          turmaCell.textContent = aluno.turma;
+          // const turmaCell = newRow.insertCell(2);
+          // turmaCell.textContent = aluno.turma;
 
-          const idCell = newRow.insertCell(3);
+          const idCell = newRow.insertCell(1);
           idCell.textContent = aluno.id;
       });
   }
