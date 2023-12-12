@@ -23,7 +23,7 @@ class EscolasController {
   }
 
   async show(req, res) {
-    const { escolaId } = req.query;
+    const { escolaId } = req.params;
 
     const escola = await knex("escolas")
       .innerJoin("alunos", "escolas.id", "alunos.escolaId")

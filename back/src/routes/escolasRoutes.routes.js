@@ -7,7 +7,7 @@ const escolasRouter = Router();
 
 escolasRouter.post('/', escolasController.create);
 escolasRouter.get('/listar', escolasController.index);
-escolasRouter.get('/', escolasController.show);
+escolasRouter.get('/:escolaId', escolasController.show);
 escolasRouter.put('/', escolasController.update);
 
 module.exports = escolasRouter;
