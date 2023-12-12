@@ -22,47 +22,34 @@ class TurmasController {
     res.status(201).json();
   }
 
-  // async index(req, res) {
-  //   const turmas = await prisma.turma.findMany();
+  async show(req, res) {
+    const { turmaId } = req.params;
+  
+    const turmaComAlunos = await knex("alunos").where({ turmaId });
+    
+    res.json(turmaComAlunos);
+  }
 
-  //   if (!turmas) {
-  //     throw new AppError("Nenhum registro de turmas encontrado.");
-  //   }
+  async index(req, res) {
+    const turmas = await knex("turmas");
 
-  //   res.status(200).json(turmas);
-  // }
+    res.json(turmas);
+  }
 
-  // async update(req, res) {
-  //   const { id } = req.params;
-  //   const { materiaId, ano } = req.body;
+  async update(req, res) {
+    const { turmaId } = req.params;
+    const { nome, ano } = req.body;
 
-  //   if (!id) {
-  //     throw new AppError("É necessário passar o id do item que será alterado.");
-  //   }
+    if (!nome || !ano) {
+      throw new AppError("Todos os campos devem estar preenchidos.");
+    }
 
-  //   if (!materiaId) {
-  //     throw new AppError("É necessário passar o ano da turma atualizado");
-  //   }
+    await knex("turmas")
+      .where({ id: turmaId })
+      .update({ nome, ano, updated_at: knex.fn.now() });
 
-  //   const turma = await prisma.turma.update({
-  //     where: { id: parseInt(id) },
-  //     data: { materiaId, ano },
-  //   });
-
-  //   res.status(200).json(turma);
-  // }
-
-  // async delete(req, res) {
-  //   const { id } = req.params;
-
-  //   if (!id) {
-  //     throw new AppError("É necessário passar o id do item que será excluído.");
-  //   }
-
-  //   await prisma.turma.delete({ where: { id: parseInt(id) } });
-
-  //   res.status(200).json({ message: "Turma excluída com sucesso." });
-  // }
+    res.json();
+  }
 }
 
 module.exports = TurmasController;
