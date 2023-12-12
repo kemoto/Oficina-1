@@ -3,23 +3,24 @@ const AppError = require("../utils/AppError");
 
 class TurmasController {
   async create(req, res) {
-    const { nome } = req.body;
+    const { nome, escolaId } = req.body;
 
-    await knex("turmas").insert({ nome});
+    await knex("turmas").insert({ nome, escolaId });
 
     res.status(201).json();
   }
 
   async show(req, res) {
     const { turmaId } = req.params;
-  
+
     const turmaComAlunos = await knex("alunos").where({ turmaId });
-    
+
     res.json(turmaComAlunos);
   }
 
   async index(req, res) {
-    const turmas = await knex("turmas");
+    const { escolaId } = req.query;
+    const turmas = await knex("turmas").where({ escolaId });
 
     res.json(turmas);
   }

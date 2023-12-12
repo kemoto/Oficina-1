@@ -3,8 +3,21 @@ const AppError = require("../utils/AppError");
 
 class NotasController {
   async create(req, res) {
-    const { nota, bimestre, materiaId, alunoId } = req.body;
+    const { nome, nota, bimestre, alunoId } = req.body;
+    let materiaId;
 
+    const materia = await knex("materias").where({nome}).first();
+
+    if(materia) {
+      materiaId = materia.id;
+    }
+
+    if (!nome) {
+      throw new AppError("Nome não definido.");
+    }
+
+    await knex("materias").insert({ nome });
+    
     const notasCadastradas = await knex("notas").where({bimestre, materiaId, alunoId});
 
     if(notasCadastradas[0]) {
@@ -35,6 +48,7 @@ class NotasController {
   }
 
   async update(req, res) {
+    console.log("teste");
     const { notaId } = req.query;
     const { nota, bimestre, materiaId, alunoId } = req.body;
 

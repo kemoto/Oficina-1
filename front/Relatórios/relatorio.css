@@ -2,10 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
 }
 
 body {
@@ -39,15 +39,9 @@ main {
     flex-direction: column;
     align-items: left;
     width: 75%;
-    height: 162vh;
+    height: 150vh;
     margin: auto;
     position: relative;
-}
-
-section#pesquisa {
-    display: flex;
-    width: 96%;
-    margin-bottom: 15px;
 }
 
 .relatorio {
@@ -63,47 +57,6 @@ section#pesquisa {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     gap: 10px;
 }
-span{
-    font-size: 1.15em;
-    color: gray;
-    font-weight: 500;
-}
-
-.barra-pesquisa {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    gap: 10px;
-}
-
-.barra-pesquisa input {
-    font-size: 16px;
-    padding: 10px;
-    width: 40%;
-}
-button{
-    width: 25%;
-    height: 7vh;
-    background-color: rgb(212, 201, 201);
-    border: none;
-    font-size: 16px;
-    padding: 10px;
-    border-radius: 5px;
-    font-weight: 500;
-}
-button:hover{
-    cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.322);
-}
-button.procurar{
-    width: 25%;
-    background-color: #009de0;
-    color: white;
-    font-weight: 500;
-}
-button.procurar:hover{
-    background-color: #0e678d;
-}
 span.relatorio{
     padding: 0;
     margin: 0;
@@ -114,6 +67,7 @@ span.relatorio{
     font-weight: 900;
     background-color: #dadddf;
     width: 100%;
+    margin-bottom: 17px;
 }
 section#media{
     width: 96%;
@@ -124,19 +78,55 @@ section#media{
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 15px;
+    overflow: auto;
+    margin-top: 20px;
+}
+section#media::-webkit-scrollbar {
+    width: 12px;
+}
+section#media::-webkit-scrollbar-thumb {
+    background-color: #E9802A;
+    border-radius: 10px;
 }
 
-section#grafico{
+section#media::-webkit-scrollbar-track {
+    background-color: #dba06f;
+}
+.materia-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.materia-table th, .materia-table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.materia-table th {
+    background-color: #009de0;
+    color: #fff;
+}
+
+.materia-table td:first-child {
+    text-align: left;
+    font-weight: bold;
+}
+
+#graficoBarras {
     width: 96%;
-    height: 70vh;
     background-color: #fff;
     padding: 20px;
     margin-left: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
 }
-.nota {
-    margin-bottom: 5px;
+
+#graficoContainer {
+    display: flex;
+    flex-direction: column;
 }
 
 .barra-container {
@@ -145,7 +135,14 @@ section#grafico{
     margin-bottom: 10px;
 }
 
-.nome-aluno {
+.nome-materia-container{
+    font-size: 1.3em;
+    color: black;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.nome-materia {
     margin-right: 10px;
     font-weight: bold;
 }
@@ -154,4 +151,6 @@ section#grafico{
     height: 20px;
     background-color: #009de0;
     border-radius: 5px;
+    transition: width 0.5s ease-in-out;
+    margin-right: 5px;
 }

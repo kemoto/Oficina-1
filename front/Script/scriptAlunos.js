@@ -28,7 +28,7 @@ async function populateTable() {
 
           const nomeCell = newRow.insertCell(0);
           const nomeLink = document.createElement('a');
-          nomeLink.href = '../Notas/notas.html'; 
+          nomeLink.href = `../Notas/notas.html?alunoNome=${encodeURIComponent(aluno.nome)}`;
           nomeLink.textContent = aluno.nome;
           nomeCell.appendChild(nomeLink);
 

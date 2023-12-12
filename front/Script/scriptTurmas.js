@@ -14,7 +14,7 @@ atualizarTituloTurmas();
 
 async function getUsers() {
   try {
-    const response = await fetch("http://localhost:3000/turmas/listar");
+    const response = await fetch(`http://localhost:3000/turmas/listar?escolaId=${obterParametroDaURL("escolaId")}`);
 
     if (!response.ok) {
       throw new Error(`Erro na requisição: ${response.statusText}`);
@@ -42,7 +42,7 @@ async function populateTable() {
 
       const turmaCell = newRow.insertCell(0);
       const turmaLink = document.createElement("a");
-      turmaLink.href = `../TurmaAlunos/turmaalunos.html?turmaNome=${encodeURIComponent(turma.nome)}`;
+      turmaLink.href = `../TurmaAlunos/turmaalunos.html?turmaNome=${encodeURIComponent(turma.nome)}&turmaId=${turma.id}&escolaId=${obterParametroDaURL("escolaId")}`;
       turmaLink.textContent = turma.nome;
       turmaCell.appendChild(turmaLink);
 
@@ -71,6 +71,7 @@ async function adicionarTurma() {
       },
       body: JSON.stringify({
         nome: nomeTurma,
+        escolaId: obterParametroDaURL("escolaId"),
       }),
     });
 

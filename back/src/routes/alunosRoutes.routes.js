@@ -7,7 +7,7 @@ const alunosRouter = Router();
 
 alunosRouter.post('/', alunosController.create);
 alunosRouter.get('/listar', alunosController.index);
-alunosRouter.get('/:alunoId', alunosController.show);
+alunosRouter.get('/', alunosController.show);
 alunosRouter.put('/:alunoId', alunosController.update);
 
 module.exports = alunosRouter;

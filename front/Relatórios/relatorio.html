@@ -28,38 +28,23 @@
         </header>
             <main>
 
-                <section id="pesquisa">
-                    <div class="relatorio">
-                        <div class="barra-pesquisa">
-                            <span>Período:</span>
-                            <input type="date" id="dataInicio" placeholder="Data de Início">
-                            <input type="date" id="dataFim" placeholder="Data de Fim">
+                <section id="media">
+                    <div class="relatorio-media">
+                        <span class="relatorio">Médias das Notas</span>
+                        <div id="relatorioNotas">
+
                         </div>
-                        <button onclick="limparPesquisa()">Limpar</button>
-                        <button class="procurar" onclick="procurar()">Procurar</button>
+                    </div>
                 </section>
 
-                    <section id="media">
-                        <div class="relatorio-media">
-                            <!-- Aqui vai o relatório das médias das notas do aluno -->
-                            <span class="relatorio">Médias das Notas</span>
-                            <div id="relatorioNotas">
-                                <!-- Conteúdo do relatório aqui -->
-                            </div>
-                        </div>
-                    </section>
+                <section id="graficoBarras">
+                    <span class="relatorio">Gráfico de Barras</span>
+                    <div id="graficoContainer">
 
-                    <section id="grafico">
-                        <div class="relatorio-grafico">
-                            <!-- Aqui vai o relatório em formato de gráfico -->
-                            <span class="relatorio">Médias em Gráfico</span>
-                            <div id="grafico">
-                                <!-- Conteúdo do gráfico aqui -->
-                            </div>
-                        </div>
-                    </section>
+                    </div>
+                </section>
 
-                </div>
+
             </main>
     </div>
     <script src="../Script/scriptRelatorio.js"></script>

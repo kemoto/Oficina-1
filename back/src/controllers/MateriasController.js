@@ -5,6 +5,12 @@ class MateriasController {
   async create(req, res) {
     const { nome } = req.body;
 
+    const materia = await knex("materias").where({nome}).first();
+
+    if(materia) {
+      res.json(materia.id);
+    }
+
     if (!nome) {
       throw new AppError("Nome não definido.");
     }
@@ -14,7 +20,9 @@ class MateriasController {
   }
 
   async index(req, res) {
-    const materias = await knex("materias");
+    const materias = await knex("materias").where({nome});
+
+    console.log(nome)
 
     res.json(materias);
   }

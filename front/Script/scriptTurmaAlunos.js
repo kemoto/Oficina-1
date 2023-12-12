@@ -14,7 +14,7 @@ atualizarTituloTurmas();
 
 async function getUsers() {
   try {
-    const response = await fetch("http://localhost:3000/alunos/listar");
+    const response = await fetch(`http://localhost:3000/alunos/listar?turmaId=${obterParametroDaURL("turmaId")}`);
 
     if (!response.ok) {
       throw new Error(`Erro na requisição: ${response.statusText}`);
@@ -45,6 +45,7 @@ async function populateTable() {
 
   if (dados && dados.length > 0) {
     dados.forEach((aluno) => {
+      console.log(aluno)
       const newRow = tableBody.insertRow();
 
       const nomeCell = newRow.insertCell(0);
@@ -52,7 +53,7 @@ async function populateTable() {
       alunoLink.setAttribute("data-aluno-id", aluno.id);
       console.log(aluno.id);
       alunoLink.addEventListener("click", handleAlunoClick);
-      alunoLink.href = `../Notas/notas.html?alunoNome=${encodeURIComponent(aluno.nome)}`;
+      alunoLink.href = `../Notas/notas.html?alunoNome=${encodeURIComponent(aluno.nome)}&alunoId=${aluno.id}`;
       alunoLink.textContent = aluno.nome;
       nomeCell.appendChild(alunoLink);
 
@@ -84,6 +85,8 @@ async function adicionarTurmaAluno() {
       },
       body: JSON.stringify({
         nome: nomeAluno,
+        escolaId: obterParametroDaURL("escolaId"),
+        turmaId: obterParametroDaURL("turmaId"),
       }),
     });
 

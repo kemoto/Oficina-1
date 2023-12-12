@@ -3,16 +3,16 @@ const AppError = require("../utils/AppError");
 
 class AlunosController {
   async create(req, res) {
-    const { nome } = req.body;
+    const { nome, escolaId, turmaId } = req.body;
 
-    await knex("alunos").insert({ nome });
+    await knex("alunos").insert({ nome, escolaId, turmaId });
 
     res.json();
   }
 
   //lista 1 aluno
   async show(req, res) {
-    const { alunoId } = req.params;
+    const { alunoId } = req.query;
 
     if (!alunoId) {
       throw new AppError("Aluno não encontrado.");
@@ -27,14 +27,16 @@ class AlunosController {
       )
       .from("notas")
       .leftJoin("materias", "notas.materiaId", "materias.id")
-      .groupBy("notas.materiaId", "materias.nome");
+      .groupBy("notas.materiaId", "materias.nome")
+      .where({ alunoId });
 
     res.json(alunoComMaterias);
   }
 
   //lista todos os alunos
   async index(req, res) {
-    const alunos = await knex("alunos");
+    const { turmaId } = req.query;
+    const alunos = await knex("alunos").where({ turmaId });
 
     res.json(alunos);
   }

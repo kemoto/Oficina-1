@@ -6,7 +6,7 @@ function obterParametroDaURL(nomeParametro) {
 function atualizarTituloTurmas() {
   const nomeAluno = obterParametroDaURL("alunoNome");
   if (nomeAluno) {
-      document.querySelector("#cabeca h2").textContent = nomeAluno;
+    document.querySelector("#cabeca h2").textContent = nomeAluno;
   }
 }
 
@@ -16,7 +16,9 @@ async function getUsers() {
   const alunoId = localStorage.getItem("alunoId");
 
   try {
-    const response = await fetch(`http://localhost:3000/alunos/${alunoId}`);
+    const response = await fetch(
+      `http://localhost:3000/alunos/?alunoId=${alunoId}`
+    );
 
     if (!response.ok) {
       throw new Error(`Erro na requisição: ${response.statusText}`);
@@ -39,59 +41,62 @@ async function populateTable() {
 
   if (dados && dados.length > 0) {
     dados.forEach((materia) => {
-      console.log("String JSON antes do parse:", materia.notas);
-
       const newRow = tableBody.insertRow();
 
       const nomeMateriaCell = newRow.insertCell(0);
       nomeMateriaCell.textContent = materia.nomeMateria;
 
-      const notasArray = JSON.parse(`[${materia.notas}]`|| "0");
-      console.log("Array de objetos após o parse:", notasArray);
-    // Adiciona as notas nas células subsequentes (colunas 1 a 4)
-    for (let i = 1; i <= 4; i++) {
-      const notaCell = newRow.insertCell(i);
+      const notasArray = JSON.parse(`[${materia.notas}]` || "0");
+      for (let i = 1; i <= 4; i++) {
+        const notaCell = newRow.insertCell(i);
 
-      // Verifica se há uma nota disponível para o bimestre atual
-      const notaDoBimestre = notasArray.find(nota => nota.bimestre === i);
-      if (notaDoBimestre) {
-        notaCell.textContent = notaDoBimestre.nota;
-      } else {
-        notaCell.textContent = 'N/A'; // Ou qualquer valor padrão para notas ausentes
+        const notaDoBimestre = notasArray.find((nota) => nota.bimestre === i);
+        if (notaDoBimestre) {
+          notaCell.textContent = notaDoBimestre.nota;
+        } else {
+          notaCell.textContent = "N/A";
+        }
       }
-    }
 
-      const editCell = newRow.insertCell(5);
-      var imagem = document.createElement("img");
-      imagem.src = "../imagens/Editor2.png";
-      imagem.style.float = "right";
-      editCell.appendChild(imagem);
+      // const editCell = newRow.insertCell(5);
+      // let editButton = document.createElement("button");
+      // let imageButton = document.createElement("img");
+      // imageButton.src = "../imagens/Editor2.png";
+      // imageButton.style.float = "right";
+      // editButton.addEventListener("click", () => updateMostrarModal(materia.notas));
+      // editButton.appendChild(imageButton);
+      // editCell.appendChild(editButton);
     });
   }
 }
 
 populateTable();
 
-function adicionarNota() {
+async function adicionarNota() {
   const nomeMateria = document.getElementById("nomeMateria").value;
-  const nota1 = document.getElementById("nota1").value;
-  const nota2 = document.getElementById("nota2").value;
-  const nota3 = document.getElementById("nota3").value;
-  const nota4 = document.getElementById("nota4").value;
+  const bimestre = document.getElementById("bimestre").value;
+  const nota = document.getElementById("nota").value;
 
-  const novaMateria = {
-    nomeMateria: nomeMateria,
-    nota1: nota1,
-    nota2: nota2,
-    nota3: nota3,
-    nota4: nota4,
-  };
+  try {
+    const response = await fetch("http://localhost:3000/notas/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nome: nomeMateria,
+        alunoId: obterParametroDaURL("alunoId"),
+        bimestre,
+        nota,
+      }),
+    });
 
-  dados.push(novaMateria);
-
-  populateTable(dados);
-
-  fecharModal();
+    if (response.ok) {
+      populateTable();
+    }
+  } catch (error) {
+    console.error("Erro na requisição:", error);
+  }
 }
 
 function fecharModal() {
@@ -103,10 +108,8 @@ function fecharModal() {
 
 function mostrarModal() {
   document.getElementById("nomeMateria").value = "";
-  document.getElementById("nota1").value = "";
-  document.getElementById("nota2").value = "";
-  document.getElementById("nota3").value = "";
-  document.getElementById("nota4").value = "";
+  document.getElementById("bimestre").value = "";
+  document.getElementById("nota").value = "";
   const overlay = document.getElementById("overlay");
   overlay.style.display = "block";
   const modal = document.getElementById("modal");
