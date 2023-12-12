@@ -1,3 +1,17 @@
+function obterParametroDaURL(nomeParametro) {
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  return urlSearchParams.get(nomeParametro);
+}
+
+function atualizarTituloTurmas() {
+  const nomeEscola = obterParametroDaURL("escolaNome");
+  if (nomeEscola) {
+      document.querySelector("#cabeca h2").textContent = nomeEscola;
+  }
+}
+
+atualizarTituloTurmas();
+
 async function getUsers() {
   try {
     const response = await fetch("http://localhost:3000/turmas/listar");
@@ -28,7 +42,7 @@ async function populateTable() {
 
       const turmaCell = newRow.insertCell(0);
       const turmaLink = document.createElement("a");
-      turmaLink.href = "../TurmaAlunos/turmaalunos.html";
+      turmaLink.href = `../TurmaAlunos/turmaalunos.html?turmaNome=${encodeURIComponent(turma.nome)}`;
       turmaLink.textContent = turma.nome;
       turmaCell.appendChild(turmaLink);
 

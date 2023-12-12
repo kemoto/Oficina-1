@@ -1,3 +1,17 @@
+function obterParametroDaURL(nomeParametro) {
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  return urlSearchParams.get(nomeParametro);
+}
+
+function atualizarTituloTurmas() {
+  const nomeTurma = obterParametroDaURL("turmaNome");
+  if (nomeTurma) {
+      document.querySelector("#cabeca h2").textContent = nomeTurma;
+  }
+}
+
+atualizarTituloTurmas();
+
 async function getUsers() {
   try {
     const response = await fetch("http://localhost:3000/alunos/listar");
@@ -38,7 +52,7 @@ async function populateTable() {
       alunoLink.setAttribute("data-aluno-id", aluno.id);
       console.log(aluno.id);
       alunoLink.addEventListener("click", handleAlunoClick);
-      alunoLink.href = `../Notas/notas.html`;
+      alunoLink.href = `../Notas/notas.html?alunoNome=${encodeURIComponent(aluno.nome)}`;
       alunoLink.textContent = aluno.nome;
       nomeCell.appendChild(alunoLink);
 

@@ -18,10 +18,16 @@ class AlunosController {
       throw new AppError("Aluno não encontrado.");
     }
 
-    const alunoComMaterias = await knex("alunos")
-      .innerJoin("notas", "alunos.id", "notas.alunoId")
-      .innerJoin("materias", "materias.id", "notas.materiaId")
-      .where({ "alunos.id": alunoId });
+    const alunoComMaterias = await knex("notas")
+      .select("notas.materiaId", "materias.nome as nomeMateria")
+      .select(
+        knex.raw(
+          `GROUP_CONCAT(JSON_OBJECT('bimestre', bimestre, 'nota', nota) , ',') AS notas`
+        )
+      )
+      .from("notas")
+      .leftJoin("materias", "notas.materiaId", "materias.id")
+      .groupBy("notas.materiaId", "materias.nome");
 
     res.json(alunoComMaterias);
   }

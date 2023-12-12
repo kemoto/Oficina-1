@@ -5,9 +5,11 @@ class NotasController {
   async create(req, res) {
     const { nota, bimestre, materiaId, alunoId } = req.body;
 
-    const notasCadastradas = await knex("notas").where({materiaId, alunoId});
+    const notasCadastradas = await knex("notas").where({bimestre, materiaId, alunoId});
 
-    console.log(notasCadastradas);
+    if(notasCadastradas[0]) {
+      throw new AppError("Essa nota já tem cadastro para o bimestre.");
+    }
 
     if (!nota) {
       throw new AppError("É preciso informar a nota.");

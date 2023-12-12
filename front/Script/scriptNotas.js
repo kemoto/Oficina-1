@@ -1,3 +1,17 @@
+function obterParametroDaURL(nomeParametro) {
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  return urlSearchParams.get(nomeParametro);
+}
+
+function atualizarTituloTurmas() {
+  const nomeAluno = obterParametroDaURL("alunoNome");
+  if (nomeAluno) {
+      document.querySelector("#cabeca h2").textContent = nomeAluno;
+  }
+}
+
+atualizarTituloTurmas();
+
 async function getUsers() {
   const alunoId = localStorage.getItem("alunoId");
 
@@ -25,17 +39,27 @@ async function populateTable() {
 
   if (dados && dados.length > 0) {
     dados.forEach((materia) => {
-      console.log(materia);
+      console.log("String JSON antes do parse:", materia.notas);
 
       const newRow = tableBody.insertRow();
 
       const nomeMateriaCell = newRow.insertCell(0);
-      nomeMateriaCell.textContent = materia.nome;
+      nomeMateriaCell.textContent = materia.nomeMateria;
 
-      for (let i = 1; i <= 4; i++) {
-        const notaCell = newRow.insertCell(i);
-        notaCell.textContent = materia.nota[i];
+      const notasArray = JSON.parse(`[${materia.notas}]`|| "0");
+      console.log("Array de objetos após o parse:", notasArray);
+    // Adiciona as notas nas células subsequentes (colunas 1 a 4)
+    for (let i = 1; i <= 4; i++) {
+      const notaCell = newRow.insertCell(i);
+
+      // Verifica se há uma nota disponível para o bimestre atual
+      const notaDoBimestre = notasArray.find(nota => nota.bimestre === i);
+      if (notaDoBimestre) {
+        notaCell.textContent = notaDoBimestre.nota;
+      } else {
+        notaCell.textContent = 'N/A'; // Ou qualquer valor padrão para notas ausentes
       }
+    }
 
       const editCell = newRow.insertCell(5);
       var imagem = document.createElement("img");
@@ -46,81 +70,7 @@ async function populateTable() {
   }
 }
 
-// Exemplo de uso
-const dados = [
-  {
-    nomeMateria: "Matemática",
-    nota1: "8",
-    nota2: "7",
-    nota3: "9",
-    nota4: "10",
-  },
-  {
-    nomeMateria: "Português",
-    nota1: "9",
-    nota2: "8",
-    nota3: "7",
-    nota4: "6",
-  },
-  {
-    nomeMateria: "Geografia",
-    nota1: "10",
-    nota2: "9",
-    nota3: "8",
-    nota4: "7",
-  },
-  {
-    nomeMateria: "História",
-    nota1: "6",
-    nota2: "7",
-    nota3: "8",
-    nota4: "9",
-  },
-  {
-    nomeMateria: "Inglês",
-    nota1: "7",
-    nota2: "8",
-    nota3: "9",
-    nota4: "10",
-  },
-  {
-    nomeMateria: "Educação Física",
-    nota1: "8",
-    nota2: "9",
-    nota3: "10",
-    nota4: "7",
-  },
-  {
-    nomeMateria: "Artes",
-    nota1: "10",
-    nota2: "9",
-    nota3: "8",
-    nota4: "7",
-  },
-  {
-    nomeMateria: "Ciências",
-    nota1: "7",
-    nota2: "8",
-    nota3: "9",
-    nota4: "10",
-  },
-  {
-    nomeMateria: "Filosofia",
-    nota1: "8",
-    nota2: "9",
-    nota3: "10",
-    nota4: "7",
-  },
-  {
-    nomeMateria: "Sociologia",
-    nota1: "10",
-    nota2: "9",
-    nota3: "8",
-    nota4: "7",
-  },
-];
-
-populateTable(dados);
+populateTable();
 
 function adicionarNota() {
   const nomeMateria = document.getElementById("nomeMateria").value;
