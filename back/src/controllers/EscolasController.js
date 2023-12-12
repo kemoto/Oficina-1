@@ -3,15 +3,15 @@ const AppError = require("../utils/AppError");
 
 class EscolasController {
   async create(req, res) {
-    const { nome, contato } = req.body;
+    const { nome, endereco, contato } = req.body;
 
-    if (!nome || !contato) {
+    if (!nome || !endereco || !contato) {
       throw new AppError(
         "Todos os campos são necessários para completar o cadastro."
       );
     }
 
-    await knex("escolas").insert({ nome, contato });
+    await knex("escolas").insert({ nome, endereco, contato });
 
     res.status(201).json();
   }
@@ -33,11 +33,11 @@ class EscolasController {
   }
 
   async update(req, res) {
-    const { escolaId } = req.query;
-    const { nome, contato } = req.body;
+    const { escolaId, nome, endereco, contato } = req.body;
 
     await knex("escolas").where({ id: escolaId }).update({
       nome,
+      endereco,
       contato,
       updated_at: knex.fn.now(),
     });
