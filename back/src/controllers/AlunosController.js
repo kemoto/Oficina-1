@@ -41,6 +41,12 @@ class AlunosController {
     res.json(alunos);
   }
 
+  async indexTodos(req,res) {
+    const alunos = await knex("alunos");
+
+    res.json(alunos);
+  }
+
   async update(req, res) {
     const { alunoId } = req.params;
     const { nome } = req.body;

@@ -1,6 +1,6 @@
 async function getUsers() {
   try {
-    const response = await fetch("http://localhost:3000/alunos/listar");
+    const response = await fetch("http://localhost:3000/alunos/listarTodos");
 
     if (!response.ok) {
       throw new Error(`Erro na requisição: ${response.statusText}`);
